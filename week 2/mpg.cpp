@@ -67,27 +67,38 @@ double mpg(double liters, double miles){
 
 /* Results
 
-
 Please enter the liters used: 1
 
 Please enter the miles traveled: 1
 
 The number of miles per gallon is: 3.78531
 
-Would you like to continue? Type N to quit
-r
+Would you like to continue?
+(Type N to quit, any key to continue):
+y
 
 Please enter the liters used: 2
 
-Please enter the miles traveled: 4
+Please enter the miles traveled: 5
 
-The number of miles per gallon is: 7.57062
+The number of miles per gallon is: 9.46328
 
-Would you like to continue? Type N to quitn
+Would you like to continue?
+(Type N to quit, any key to continue): y
+
+Please enter the liters used: 4
+
+Please enter the miles traveled: 25
+
+The number of miles per gallon is: 23.6582
+
+Would you like to continue?
+(Type N to quit, any key to continue): n
 
 
  Program Complete! Drive safely...
 --------------------------------
-Process exited after 12.98 seconds with return value 0
+Process exited after 36.35 seconds with return value 0
 Press any key to continue . . .
+
 */
