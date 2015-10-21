@@ -7,7 +7,7 @@ Michael Lowry
 
 Week 3 hw
 
-Programming Project #4
+Programming Project #1
 
 Problem Statement: 
 Wire a program that converts from 24 hour time notation to 12 hour notation. For example, 
