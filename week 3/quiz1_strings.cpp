@@ -81,33 +81,6 @@ int stringLength(char string[])
 	return count;
 }
 
-//overloaded function instance where a single character is passed
-/*int symbol(char string[], char symbol)
-{
-	#ifdef DEBUG
-	cout << "This is the single char function\n" << endl;
-	#endif
-	//count is the array index
-	int count = 0;
-	//spaceCount accumulates the number of symbols
-	int symbolCount = 0;
-	
-	while((string[count])!='\0')	
-	{//start a while loop that counts elements
-		char temp = string[count];
-	
-		//if a symbol is read
-		if(temp == symbol)
-		{
-			//increment the space counter
-			++symbolCount;
-		}
-		++count;
-	}//end while
-	
-	return symbolCount;
-}*/
-
 int symbol(char string[], char symbol[])
 {
 	int symbolCount = 0;
