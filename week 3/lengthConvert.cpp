@@ -22,6 +22,9 @@ in a meter, and 12 inches in a foot.
 #include <iostream>
 
 #define M_PER_F 0.3048
+#define CM_PER_M 100
+#define IN_PER_FT 12
+#define MM_PER_M 1000
 
 #define DEBUG
 
@@ -65,12 +68,12 @@ void getLength(double& feet, double& inches)
 void computeMetric(double& feet, double& inches, double& meters, double& centimeters)
 {
 	//convert feet to inches
-	double tempFeet = (inches / 12.0) + feet; //add the feet to the fractional foot from inches
+	double tempFeet = (inches / IN_PER_FT) + feet; //add the feet to the fractional foot from inches
 	meters = tempFeet * M_PER_F; //multiply by constant meters per foot
 	#ifdef DEBUG 
 	cout << "meters = " <<  meters << endl;
 	#endif
-	centimeters = (meters - (int)meters%1000) * 100;
+	centimeters = (meters - (int)meters%MM_PER_M) * CM_PER_M;
 	#ifdef DEBUG 
 	cout << "centimeters = " <<  centimeters << endl;
 	#endif
