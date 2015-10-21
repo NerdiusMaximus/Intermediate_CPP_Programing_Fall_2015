@@ -1,0 +1,36 @@
+/* 
+
+Intermediate CPP
+Fall 2015
+Michael Lowry
+10/14/2015
+
+Week 2 hw
+
+Programming Project #4
+
+Problem Statement: 
+The gravitational attractive force between two bodies with masses m1 and m2 seperated 
+by a distance d is given by the following formula: 
+
+F = (G*m1*m2)/(d^2)
+
+where G is the universal gravitational constant: 
+
+G = 6.673x10-8 cm^3/(g*sec^2)
+
+Write a function definition that takes arguments for the masses of the two bodies and
+the distance between them and returns the gravitational force between them. Since you
+will use the above formula, the gravitational force will be in dynes. One dyne equals a
+
+1 dyne = (g*cm)/(sec^2)
+
+You should use a globally defined constant for the universal gravity constant. Embed
+your function definition into a complete program that computes the gravitational force
+between two objects given suitable inputs. Your program should allow the user to repeat
+the calculation as often as the user wishes.
+
+*/
+
+#include <iostream>
+using namespace std;
