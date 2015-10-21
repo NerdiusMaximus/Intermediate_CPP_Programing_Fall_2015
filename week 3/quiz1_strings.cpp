@@ -26,7 +26,7 @@ PS - Do not use any  of the  <string.h>  functions except strcmp(char *, char *)
 #include <iostream>
 #include <string.h>
 
-#define DEBUG
+//#define DEBUG
 
 using namespace std;
 
@@ -62,7 +62,7 @@ cin >> garbage;
 #endif
 
 //reuse the overloaded function to look for a word
-char word[] = "the";
+char word[] = " the ";
 int numWords = symbol(string, word);
 cout << "There are " << numWords << " instances of the word: \"" << word << "\" in the prose.\n\n";
 
@@ -119,15 +119,29 @@ int symbol(char string[], char symbol[])
 	
 	int count = 0;
 	int val = 0;
+	
+		
+	char* temp;
+	temp = new char [wordLen];
+	
 	while(string[count] != '\0')
 	{
+		for (int i = 0; i < wordLen; i++)
+		{
+			temp[i] = string[i + count];
+		}
+		temp[wordLen] = '\0';
+				
+		#ifdef DEBUG
+		cout << "temp = " << temp[0] << endl;
+		#endif
 
-		val = strcmp(symbol,&string[count]);
+		val = strcmp(temp,symbol);
 		#ifdef DEBUG
 		//debug statements
 		cout << "\ncount = " << count << endl;
 		cout << "symbolCount = " << symbolCount << endl;
-		cout << "\nstrings being compared: \n\n\"" << symbol << "\"\n\n\"" << &string[count] << "\"\n\n";
+		cout << "\nstrings being compared: \n\n\"" << symbol << "\"\n\n\"" << temp  << "\"\n\n";
 		cout << "val = " << val << "\n\n";
 		#endif
 		if (val == 0)
@@ -158,6 +172,8 @@ int symbol(char string[], char symbol[])
 		count++;
 	}
 	
+	delete temp;
+	
 	return symbolCount;
 }
 
@@ -168,11 +184,11 @@ The length of the prose is: 216.
 
 There are 43 spaces in the prose.
 
-There are 19 instances of the word: "the" in the prose.
+There are 3 instances of the word: " the " in the prose.
 
 
 --------------------------------
-Process exited after 1.095 seconds with return value 0
+Process exited after 1.085 seconds with return value 0
 Press any key to continue . . .
 
 */
