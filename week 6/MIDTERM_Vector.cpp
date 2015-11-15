@@ -332,11 +332,11 @@ void Vector::VectorPrint(int length)
 	cout << "Vector elements: " << endl;
 	for (int i = 0; i <= length; ++i)
 	{
-		cout << *(ptr + i) << "\t";
 		if(i >= size){
 			cout << "There are only " << size << " elements. Here are the first " << size << " elements. "<<endl;
 			break;
 		};
+		cout << *(ptr + i) << "\t";
 	}
 	cout << endl << endl << "End output\n" << endl << endl;
 }
@@ -356,10 +356,10 @@ void Vector::VectorConcat(const Vector & rhs)
 	
 	for (int i = 0; i <= rhs.size; ++i)
 	{
-		temp[size + i + 1] = rhs.ptr[i];
+		temp[size + i ] = rhs.ptr[i];
 	}
-	size = size + rhs.size; //make vector larger
 	capacity = capacity + rhs.capacity; //make capacity larger
+	size = size + rhs.size; //make vector larger
 	
 	//reassign ptr to temp 
 	ptr = temp;
