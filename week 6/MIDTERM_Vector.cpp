@@ -12,7 +12,7 @@ PROBLEM STATEMENT
 class Vector{
 	int size;
 	int capacity;  	//make sure to be generous
-     int * ptr;		//pointer to heap
+    int * ptr;		//pointer to heap
 public:
 //Vector Constructors & Destructors
 	Vector();		//constructor - creates zero length vector
@@ -22,18 +22,18 @@ public:
 //Accessor/Mutators
 	int getSize()const;
 	int getValue(int element);
-     int getCapacity();
+    int getCapacity();
 	void setValue(int element, int value);
-	    //other member functions
-                    void resize(int size, int value = 0); //resize vector and init new values
-                    void push_back(int value);  
-		void push_front(int value)
-                    int pop_back();
-                    int pop_front();
+//other member functions
+    void resize(int size, int value = 0); //resize vector and init new values
+    void push_back(int value);  
+	void push_front(int value)
+    int pop_back();
+    int pop_front();
 void VectorPrint( );	//prints the entire vector
-                      void VectorPrint(int length);	//prints the first length elements
+    void VectorPrint(int length);	//prints the first length elements
 //concatenate rhs vector to existing vector
-                      void VectorConcat(const Vector & rhs);  
+    void VectorConcat(const Vector & rhs);  
 };
 Demonstrate that the following cases work:
 (i)	Vector X(8);
@@ -85,26 +85,49 @@ class Vector{
 int main()
 {
 	//Demonstrate that the following cases work:
+	cout << "\nVector X Initialization\nVectorX;" << endl;
 	Vector X;
-	cout << "Vector X Init" << endl;
 	X.VectorPrint();
 	
+	cout << "\nVector Y Initialization \nVector Y(8,10);" << endl;
 	Vector Y(8,10);
-	cout << "Vector Y Init" << endl;
 	Y.VectorPrint();
 	
+	cout << "\nVector X Resize\nX.resize(16);" <<endl;
 	X.resize(16);
-	cout << "Vector X Resize" <<endl;
 	X.VectorPrint();
-	//	X.pop_front( );
-	//	X.pop_back( );
-	//	Y.push_front(100);
-	//	Y.setValue(10,-99);
-	//	Y.push_back(100);
-	//	X.VectorConcat(Y);
+	
+	cout << "\nX.pop_front( );" << endl<<endl;
+	X.pop_front( );
+	X.VectorPrint();
+	
+	cout << "\nX.pop_back( );" << endl<<endl;
+	X.pop_back( );
+	X.VectorPrint();
+	
+	cout << "\nY.push_front(100);" << endl<<endl;
+	Y.push_front(100);
+	Y.VectorPrint();
+	
+	cout << "\nSetting 10th Value of Vector Y to -99" <<endl;
+	Y.setValue(10,-99);
+	Y.VectorPrint();
 	
 	
-	//	Y.Print(12);
+	cout << "\nSetting 9th Value of Vector Y to -99" <<endl;
+	Y.setValue(9,-99);
+	Y.VectorPrint();
+
+	cout << "\nY.push_back(100);" <<endl;
+	Y.push_back(100);
+	Y.VectorPrint();
+
+	cout << "\nX.VectorConcat(Y);" <<endl;
+	X.VectorConcat(Y);
+	X.VectorPrint();
+	
+	cout << "\nY.VectorPrint(12);" <<endl;
+	Y.VectorPrint(12);
 }
 
 //Constructor Definitions
@@ -133,15 +156,19 @@ Vector::Vector(int size, int value)//overloaded constructor
 }
 Vector::Vector(Vector& rhs)//copy constructor
 {
+	#ifdef DEBUG
 	cout << "Activating Copy Constructor..." << endl;
+	#endif
 	size = rhs.size;
 	capacity = rhs.capacity;
-	ptr = new int[rhs.capacity + 1];
+	ptr = new int[rhs.capacity + 1]; //make a deep copy with a new pointer to the heap
 }
 //Destructor Definition
 Vector::~Vector()
 {
+	#ifdef DEBUG
 	cout << "Activating Destructor..." << endl;
+	#endif
 	delete [] ptr; //free heap memory
 	ptr = NULL; //safe the pointer
 }
@@ -153,30 +180,29 @@ int Vector::getValue(int element)
 }
 int Vector::getCapacity()
 {
+	#ifdef DEBUG
 	cout << "Getting Capacity..." << endl;
+	#endif
 	return capacity;
 }
 int Vector::getSize()const
 {
+	#ifdef DEBUG
 	cout << "Getting Size..." << endl;
+	#endif
 	return size;
 }
 void Vector::setValue(int element, int value)
 {
-	if(element < size) //base case for recursive method
+	if(element > size)
 	{
-		*(ptr + element) = value;
+		cout << "\nWARNING: Cannot set value. There are only " << size << " elements. Cannot set element " << element << endl;
+		cout << "Element not set. Vector remains unchanged" << endl;
 	}
-	if(element > size && element < capacity){
-		//call resize function and then set element (can do recursive?)
-		resize(size,value);
-		setValue(element, value);
-	}
-	else if(element > capacity)
+	else if (element <= size)
 	{
-		//call resize function and then set element (can do recursive?)
-		resize(size,value);
-		setValue(element,value);
+		//store the value in the element (accounting for the fact that elements start from 0)
+		*(ptr + (element-1)) = value;
 	}
 }
 //other member functions
@@ -232,21 +258,59 @@ void Vector::resize(int size, int value)//resize vector and init new values
 }
 void Vector::push_back(int value)
 {//add the value to the back of the vector
+	
+	//if the capacity needs to be increased, add 8 first
 	if (size+1 >= capacity){capacity+=8;}
-	*(ptr + size+1) = value;
 	size ++;
+	//put the value into the end of the vector
+	*(ptr + size-1) = value;
+	//increment the size of the vector to account for the new element
 }
 void Vector::push_front(int value)
 {//add the value to the front of the vector (re-mapping all the rest)
+	//if the capacity needs to be increased, add 8 first
+	if (size+1 >= capacity){capacity+=8;}
 	
+	//create new temporary array to store values
+	int* temp = new int[size+1];
+	//
+	for(int i = 0; i <= size+1; ++i)
+	{
+		temp[i] = *(ptr + i); //store the values of ptr into temp
+	}
+	//increment the size of the vector to account for the new element
+	size ++;
+	
+	ptr[0] = value;//store value into the first element of ptr
+	
+	for(int i = 0; i<= size; ++i)
+	{
+		ptr[i+1] = temp[i];//store values from temp into ptr
+	}
+	delete [] temp; //free heap memory
 }
 int Vector::pop_back()
-{//deleted the first element from the back of the vector
-	
+{//delete the first element from the back of the vector
+	ptr[size] = 0;//zero out the last element
+	size --;//decrement the size
 }
 int Vector::pop_front()
 {//deletes the first element from the front of the vector
+	//create new temporary array to store values
+	int* temp = new int[size];
+	for(int i = 0; i <= size; ++i)
+	{
+		temp[i] = *(ptr + i); //store the values of ptr into temp
+	}
 	
+	for(int i = 0; i<= size-1; ++i)
+	{
+		ptr[i] = temp[i];//store values from temp into ptr
+	}	
+	//decrease size by one
+	size--;
+	
+	delete [] temp; //free heap memory
 }
 void Vector::VectorPrint( )
 {//prints the entire vector
@@ -262,24 +326,164 @@ void Vector::VectorPrint( )
 }
 void Vector::VectorPrint(int length)
 {//prints the first length elements
-	cout << "Vector Output first " << length << "elements:"<< endl;
+	cout << "Vector Output first " << length << " elements:"<< endl;
 	cout << "Size = " << size << endl;
 	cout << "Capacity = " << capacity << endl;
 	cout << "Vector elements: " << endl;
-	for (int i = 0; i < length; ++i)
+	for (int i = 0; i <= length; ++i)
 	{
 		cout << *(ptr + i) << "\t";
+		if(i >= size){
+			cout << "There are only " << size << " elements. Here are the first " << size << " elements. "<<endl;
+			break;
+		};
 	}
-	cout << endl << endl << "End output" << endl;
+	cout << endl << endl << "End output\n" << endl << endl;
 }
 void Vector::VectorConcat(const Vector & rhs)
 {//concatenate rhs vector to existing vector
+	#ifdef DEBUG
 	cout << "Vector Concatenate..." << endl;
-	//call resize function to rezie current vector to size = size + rhs.size
-	resize(size + rhs.size, 0);
-	//push_back() each element of rhs onto this vector
-	for (int i = 0; i < size; ++i)
+	#endif	
+	int* temp = new int[size + rhs.size]; //create temp value to re-map values to new heap pointer
+	//add the values from the left hand size object vector to the temp array
+	
+	for (int i = 0; i <= size; ++i)
 	{
-		*(ptr + i) = *(rhs.ptr + rhs.size + i);
+		*(temp + i) = *(ptr + i);
 	}
+	//take values from RHS and jam into LHS
+	
+	for (int i = 0; i <= rhs.size; ++i)
+	{
+		temp[size + i + 1] = rhs.ptr[i];
+	}
+	size = size + rhs.size; //make vector larger
+	capacity = capacity + rhs.capacity; //make capacity larger
+	
+	//reassign ptr to temp 
+	ptr = temp;
+	
 }
+/*
+
+Vector X Initialization
+VectorX;
+Default Constructor
+Vector Output
+Size = 0
+Capacity = 16
+Vector elements:
+
+
+End output
+
+Vector Y Initialization
+Vector Y(8,10);
+Overloaded Constructor
+Vector Output
+Size = 8
+Capacity = 24
+Vector elements:
+10      10      10      10      10      10      10      10
+
+End output
+
+Vector X Resize
+X.resize(16);
+Begin resize method...
+size = 16
+this -> size = 0
+Default Case:
+ if(this -> size < size)
+Vector Output
+Size = 16
+Capacity = 32
+Vector elements:
+0       0       0       0       0       0       0       0       0       0
+0       0       0       0       0       0
+
+End output
+
+X.pop_front( );
+
+Vector Output
+Size = 15
+Capacity = 32
+Vector elements:
+0       0       0       0       0       0       0       0       0       0
+0       0       0       0       0
+
+End output
+
+X.pop_back( );
+
+Vector Output
+Size = 14
+Capacity = 32
+Vector elements:
+0       0       0       0       0       0       0       0       0       0
+0       0       0       0
+
+End output
+
+Y.push_front(100);
+
+Vector Output
+Size = 9
+Capacity = 24
+Vector elements:
+100     10      10      10      10      10      10      10      10
+
+End output
+
+Setting 9th Value of Vector Y to -99
+Vector Output
+Size = 9
+Capacity = 24
+Vector elements:
+100     10      10      10      10      10      10      10      -99
+
+End output
+
+Y.push_back(100);
+Vector Output
+Size = 10
+Capacity = 24
+Vector elements:
+100     10      10      10      10      10      10      10      -99     0
+
+
+End output
+
+X.VectorConcat(Y);
+Vector Concatenate...
+Vector Output
+Size = 24
+Capacity = 56
+Vector elements:
+0       0       0       0       0       0       0       0       0       0
+0       0       0       0       0       100     10      10      10      10
+10      10      10      -99
+
+End output
+
+Y.VectorPrint(12);
+Vector Output first 12 elements:
+Size = 10
+Capacity = 24
+Vector elements:
+100     10      10      10      10      10      10      10      -99     0
+100     There are only 10 elements. Here are the first 10 elements.
+
+
+End output
+
+
+Activating Destructor...
+Activating Destructor...
+
+--------------------------------
+Process exited after 0.1118 seconds with return value 0
+Press any key to continue . . .
+*/
