@@ -3,12 +3,9 @@ Intermediate CPP
 Fall 2015
 Michael Lowry
 11/11/2015
-
 MIDTERM PART 2
-
 PROBLEM STATEMENT
 2.	Write a program that emulates the STL  integer Vector class.  The  Vector class should have the following format:
-
 class Vector{
 	int size;
 	int capacity;  	//make sure to be generous
@@ -122,9 +119,9 @@ int main()
 	Y.push_back(100);
 	Y.VectorPrint();
 
-//	cout << "\nX.VectorConcat(Y);" <<endl;
-//	X.VectorConcat(Y);
-//	X.VectorPrint();
+	cout << "\nX.VectorConcat(Y);" <<endl;
+	X.VectorConcat(Y);
+	X.VectorPrint();
 	
 	cout << "\nY.VectorPrint(12);" <<endl;
 	Y.VectorPrint(12);
@@ -287,7 +284,7 @@ void Vector::push_front(int value)
 	{
 		ptr[i+1] = temp[i];//store values from temp into ptr
 	}
-	
+	delete [] temp; //free heap memory
 }
 int Vector::pop_back()
 {//delete the first element from the back of the vector
@@ -366,7 +363,6 @@ void Vector::VectorConcat(const Vector & rhs)
 	
 }
 /*
-
 Vector X Initialization
 VectorX;
 Default Constructor
@@ -374,10 +370,7 @@ Vector Output
 Size = 0
 Capacity = 16
 Vector elements:
-
-
 End output
-
 Vector Y Initialization
 Vector Y(8,10);
 Overloaded Constructor
@@ -386,9 +379,7 @@ Size = 8
 Capacity = 24
 Vector elements:
 10      10      10      10      10      10      10      10
-
 End output
-
 Vector X Resize
 X.resize(16);
 Begin resize method...
@@ -402,88 +393,65 @@ Capacity = 32
 Vector elements:
 0       0       0       0       0       0       0       0       0       0
 0       0       0       0       0       0
-
 End output
-
 X.pop_front( );
-
 Vector Output
 Size = 15
 Capacity = 32
 Vector elements:
 0       0       0       0       0       0       0       0       0       0
 0       0       0       0       0
-
 End output
-
 X.pop_back( );
-
 Vector Output
 Size = 14
 Capacity = 32
 Vector elements:
 0       0       0       0       0       0       0       0       0       0
 0       0       0       0
-
 End output
-
 Y.push_front(100);
-
 Vector Output
 Size = 9
 Capacity = 24
 Vector elements:
 100     10      10      10      10      10      10      10      10
-
 End output
-
-Setting 10th Value of Vector Y to -99
-
-WARNING: Cannot set value. There are only 9 elements. Cannot set element 10
-Element not set. Vector remains unchanged
-Vector Output
-Size = 9
-Capacity = 24
-Vector elements:
-100     10      10      10      10      10      10      10      10
-
-End output
-
 Setting 9th Value of Vector Y to -99
 Vector Output
 Size = 9
 Capacity = 24
 Vector elements:
 100     10      10      10      10      10      10      10      -99
-
 End output
-
 Y.push_back(100);
 Vector Output
 Size = 10
 Capacity = 24
 Vector elements:
-100     10      10      10      10      10      10      10      -99     100
-
-
+100     10      10      10      10      10      10      10      -99     0
 End output
-
+X.VectorConcat(Y);
+Vector Concatenate...
+Vector Output
+Size = 24
+Capacity = 56
+Vector elements:
+0       0       0       0       0       0       0       0       0       0
+0       0       0       0       0       100     10      10      10      10
+10      10      10      -99
+End output
 Y.VectorPrint(12);
 Vector Output first 12 elements:
 Size = 10
 Capacity = 24
 Vector elements:
-100     10      10      10      10      10      10      10      -99     100
-There are only 10 elements. Here are the first 10 elements.
-
-
+100     10      10      10      10      10      10      10      -99     0
+100     There are only 10 elements. Here are the first 10 elements.
 End output
-
-
 Activating Destructor...
 Activating Destructor...
-
 --------------------------------
-Process exited after 0.1354 seconds with return value 0
+Process exited after 0.1118 seconds with return value 0
 Press any key to continue . . .
 */
