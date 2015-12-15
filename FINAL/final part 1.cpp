@@ -63,7 +63,7 @@ class Poly{
 		~Poly();		// destructor
 		//mutators  & accessors
 		void set();// Query user for coefficient values);
-		void set(int coeff[ ], int size);  // input coeffs via external coeff vector
+		void set(int Coeff[ ], int size);  // input coeffs via external coeff vector
 		int getOrder()const;  // get order of polynomial
 		int * get()const; 	      //returns pointer to coeff array
 	
@@ -150,7 +150,7 @@ Poly::Poly(int Order, int *Coeff)  //creates an Nth polynomial & inits
 	coeff = new int[order+1];
 	for(int i = 0; i< order+1;++i)
 	{
-		coeff[i] = Coeff[i]; //defailt the coefficient matrix to Default value
+		coeff[i] = Coeff[i]; //default the coefficient matrix to Default value
 	}
 }
 Poly::Poly(const Poly &rhs)// copy constructor
@@ -158,7 +158,12 @@ Poly::Poly(const Poly &rhs)// copy constructor
 	#ifdef DEBUG
 	cout << "Copy Constructor." << endl;
 	#endif
-	
+	order = rhs.order;
+	coeff = new int[order + 1];
+	for (int i=0; i< order + 1; ++i)
+	{
+		coeff[i] = rhs.coeff[i]; //copy each coeff from rhs to new object
+	}
 }
 //Destructor
 Poly::~Poly()	
@@ -193,8 +198,14 @@ void Poly::set() //query the user for the values
 	}
 	cout << "Input complete." << endl;
 }
-void Poly::set(int coeff[ ], int size)  // input coeffs via external coeff vector
+void Poly::set(int Coeff[ ], int size)  // input coeffs via external coeff vector
 {
+	order = size; //set the order of the polynomial
+	coeff = new int[order + 1];
+		for (int i=0; i< order + 1; ++i)
+	{
+		coeff[i] = Coeff[i]; //copy each coeff from rhs to new object
+	}
 	
 }
 int Poly::getOrder( )const  // get order of polynomial
@@ -227,6 +238,20 @@ Poly Poly::operator*(const Poly &rhs)		// mult two polynomials
 }
 bool  Poly::operator==(const Poly &rhs)		// equality operator
 {
+	//test order first; if not equal order, not equal polynomials!
+	if(order != rhs.order)
+	{
+		return false;
+	}
+	for(int i = 0; i< order + 1; ++i)
+	{
+		if(coeff[i]!= rhs.coeff[i])
+		{
+			return false;
+		}
+	}
+	//if exits the loop without returning false, polynomials are equal
+	return true;
 	
 }
 const int & Poly::operator[ ](int I)const       // return the Ith coefficient
@@ -237,7 +262,7 @@ const int & Poly::operator[ ](int I)const       // return the Ith coefficient
 //{
 //	
 //}
-int Poly::operator( )(int X)			// evaluate P(x) according (to what?)
+int Poly::operator( )(int X)			// evaluate P(x) according to a value of X
 {
 	int sum = 0; //init sum to hold accumulated number
 	for(int i = 0; i < order; ++i)
