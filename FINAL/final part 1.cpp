@@ -21,55 +21,8 @@ P(x) = 2x7 + 5x5 - 7x2 + x - 19 (7th order polynomial)
 Where the coefficients for the first and second equations can be described 
 by the following array of integers
 
-Coeff1[  ] = {-19, 1, -12, 3, 2}
-Coeff2[[ ] = {-19, 1, -7, 0, 0, 5, 0, 2}
-
-
-
-Design and code a polynomial class in C++ that has the following properties:
-
-
-
-class Poly{
-private:
-	int order;	//order of the polynomial
-	int *coeff;	// pointer to array of coeff on the heap
-			// size of coeff array predicated on (order + 1)
-
-public:
-	Poly( );		//default constructor - order=0 & coeff[0] =1
-	Poly(int Order , int Default = 1) ;// creates  Nth order poly
-                                       // and inits all coeffs
-Poly(int Order, int *Coeff);  //creates an Nth polynomial & inits 
-	 ~Poly( );		// destructor
-	   :::::::                     // copy constructor
-
-//mutators  & accessors
-void set( ){// Query user for coefficient values);
-void set(int coeff[ ], int size);  // input coeffs via external coeff vector
-int getOrder( )const;  // get order of polynomial
-int * get( ); 	      //returns pointer to coeff array
-
-//overloaded operators
-  Poly operator+( const Poly &rhs);		// add two polynomials
-  Poly operator-( const Poly &rhs);		// subt two polynomials
-  Poly operator*( const int scale);		// scale a  polynomial
-	P2 = P1*scale
-  Poly scale*Poly
-	P2 = scale*P1
-  Poly operator*(const Poly &rhs);		// mult two polynomials
-  bool  operator==(const Poly &rhs);		// equality operator
-  const int & operator[ ](int I)const;       // return the Ith coefficient
-  int & operator[ ](int I);                 	// return the Ith coefficient
-
-  int operator( )(int X);			// evaluate P(x) according 
-
-  Poly & operator=(const Poly & rhs);
-  friend ostream & operator<<(ostream & Out, const Poly &rhs);
-  
-
-//other member functions
-};
+Coeff1[ ] = {-19, 1, -12, 3, 2}
+Coeff2[ ] = {-19, 1, -7, 0, 0, 5, 0, 2}
 
 Demonstrate the following operations for the following Polynomials:
 P1(x) = 2x4 + 3x3 - 12x2 + x - 19 (4th order polynomial)
@@ -85,8 +38,6 @@ o	bool flag  = (P1==P2);
 o	P1[3] = P2[5];	// assign the 5th coefficient of P2 to 3rd coefficient of P1
 o	int Z = P1(int  X = 5);   // evaluate  Polynomial for input X
      // suggest using Horner's method
-
-
 o	The displayed polynomial for P2 should be printed as follows
 2X^7 + 7X^5 - 6X^2 + 1X - 1
 
@@ -124,7 +75,7 @@ class Poly{
 		bool  operator==(const Poly &rhs);		// equality operator
 		const int & operator[ ](int I)const;       // return the Ith coefficient
 		int & operator[ ](int I);                 	// return the Ith coefficient
-		int operator( )(int X);			// evaluate P(x) according (to what?)
+		int operator( )(int X);			// evaluate P(x) according to a value of X
 		Poly & operator=(const Poly & rhs);
 		
 		friend ostream & operator<<(ostream & Out, const Poly &rhs); //train cout how to print polynomials
@@ -140,6 +91,9 @@ int main(){
 	Poly P1, P2;
 //	P1.set([2,3,12,1,19],4);
 //	P2.set([1,0,7,0,0,6,1,-19],7);
+	
+	P1.set();
+	cout << P1;
 	
 	//
 	////display the following results  for the polynomials defined above
@@ -168,17 +122,22 @@ Poly::Poly() // Default Constructor- order=0 & coeff[0] =1
 }
 Poly::Poly(int Order , int Default)// creates  Nth order poly and inits all coeffs
 {
-	order = Order; //copy order
+	order = Order; //initialize order
 	coeff = new int[order+1];
 	for(int i = 0; i< order+1;++i)
 	{
-		coeff[i] = Default;
+		coeff[i] = Default; //defailt the coefficient matrix to Default value
 	}
 	
 }
 Poly::Poly(int Order, int *Coeff)  //creates an Nth polynomial & inits
 {
-	
+	order = Order; // sets order from argument
+	coeff = new int[order+1];
+	for(int i = 0; i< order+1;++i)
+	{
+		coeff[i] = Coeff[i]; //defailt the coefficient matrix to Default value
+	}
 }
 Poly::Poly(const Poly &rhs)// copy constructor
 {
@@ -196,14 +155,20 @@ Poly::~Poly()
 void Poly::set() //query the user for the values
 {
 	//get polynomial order
-	cout << "Please enter the order of the polynomial:" << endl;
+	cout << "Please enter the order of the polynomial (int greater than 1):" << endl;
 	cin >> order;
+	
+	if (order < 1)
+	{
+		cout << "Cannot have less than 1 order polynomial";
+		exit(1);
+	}
 	cout << "The order you entered was: " << order << endl;
 	//create heap array of ints of size order +1
 	coeff = new int[order +1];
 	for(int i = 0; i < order+1; ++i)
 	{
-		cout << "Please enter the " << i << " coefficient" << endl;
+		cout << "Please enter the order " << order - i << " coefficient" << endl;
 		cin >> coeff[i];
 	}
 	cout << "Input complete." << endl;
@@ -214,11 +179,11 @@ void Poly::set(int coeff[ ], int size)  // input coeffs via external coeff vecto
 }
 int Poly::getOrder( )const  // get order of polynomial
 {
-	
+	return order;
 }
 int * Poly::get( )const 	      //returns pointer to coeff array
 {
-	
+	return coeff;
 }
 //overloaded operators
 Poly Poly::operator+( const Poly &rhs)		// add two polynomials
@@ -254,6 +219,7 @@ int & Poly::operator[ ](int I)                 	// return the Ith coefficient
 }
 int Poly::operator( )(int X)			// evaluate P(x) according (to what?)
 {
+	int sum = 0; //init sum to hold accumulated number
 	
 }
 Poly & Poly::operator=(const Poly & rhs)
@@ -263,16 +229,60 @@ Poly & Poly::operator=(const Poly & rhs)
 
 ostream & operator<<(ostream & Out, const Poly &rhs) //train cout how to print polynomials
 {
-	for(int i = 0; i < order; ++i)
+	for(int i = 0; i < rhs.order + 1; ++i)
 	{
-		if (coeff[i]==0)
-		{
+		if (rhs.coeff[i]==0)
+		{//if coefficient is zero
 			//dont print anything
-			i++;
+			i++;//advance counter to the next coeff if zero found
+		}
+		if (i == 0)
+		{//if is first coeff, leave off + 
+			if(rhs.coeff[i] > 0)
+			{//if positive
+				Out << rhs.coeff[i] << "X^" << rhs.order-i << " ";
+			}
+			else if(rhs.coeff[i] < 0)
+			{//if negative
+				Out << rhs.coeff[i] << "X^" << rhs.order-i << " ";
+			}
 		}
 		
+		//if coeff is not the end nor the first
+		if (i < rhs.order -1 && i > 0)
+		{
+			if(rhs.coeff[i] > 0)
+			{//if positive
+				Out << "+ " << rhs.coeff[i] << "X^" << rhs.order-i << " ";
+			}
+			else if(rhs.coeff[i] < 0)
+			{//if negative
+				Out << rhs.coeff[i] << "X^" << rhs.order-i << " ";
+			}
+		}
+		if(i == rhs.order - 1)
+		{//if coeff is second to last, leave out the ^1
+			if(rhs.coeff[i] > 0)
+			{//if positive
+				Out << "+ " << rhs.coeff[i] << "X" << " ";
+			}
+			else if(rhs.coeff[i] < 0)
+			{//if negative
+				Out << rhs.coeff[i] << "X" << " ";
+			}
+		}
 		
-		Out << coeff[i] << "X^" << order-i << " ";
+		if(i == (rhs.order) && rhs.order != 0)
+		{//if is the last coeff and non zero
+			if (rhs.coeff[i] > 0)
+			{	
+				Out << "+ " << rhs.coeff[i]; //output without the "X^"
+			}
+			else if (rhs.coeff[i] < 0)
+			{
+				Out << rhs.coeff[i]; //output without the "X^"
+			}
+		}
 		
 	}
 	Out << endl;
