@@ -71,7 +71,7 @@ class Poly{
 		Poly operator+( const Poly &rhs);		// add two polynomials
 		Poly operator-( const Poly &rhs);		// subt two polynomials
 		Poly operator*( const int scale);		// scale a  polynomial
-		Poly operator*(const int scale, const Poly &rhs); 						//prefix operator overloading
+		Poly operator*(); 						//prefix operator overloading
 		//	P2 = P1*scale
 		//	Poly scale*Poly
 		//	P2 = scale*P1
@@ -111,8 +111,8 @@ int main(){
 	P3 = P1*10;
 	cout << "P3 *10 = " << P3 << endl;
 	//o	P3 = 10*P1;
-	P3 = 10*P1;
-	cout << "10 * P3 = " << P3 << endl; 
+//	P3 = 10*P1;
+//	cout << "10 * P3 = " << P3 << endl; 
 	
 	bool flag  = (P1==P2);
 	
@@ -260,7 +260,7 @@ Poly Poly::operator+( const Poly &rhs)		// add two polynomials
 		cout << "Exiting for loop..." << endl;
 		#endif
 	}
-	if(order > rhsorder)
+	else if(order > rhsorder)
 	{
 	#ifdef DEBUG
 	cout << "Order of first argument (lhs) is > order of second argument (rhs)" << endl;
@@ -288,11 +288,11 @@ Poly Poly::operator*( const int scale)		// scale a  polynomial
 	
 	return *this;
 }
-Poly Poly::operator*(const int scale, const Poly& rhs)
+Poly Poly::operator*()
 {
 	for (int i = 0; i < order; ++i)
 	{
-		rhs.coeff[i] *= scale;
+		
 	}
 }
 	//P2 = P1*scale
