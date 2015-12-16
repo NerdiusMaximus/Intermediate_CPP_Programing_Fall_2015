@@ -80,3 +80,65 @@ int main()
 	//modify the letter 'o' in S1 to be the letter 'u'
 	
 }
+
+//function definitions
+String::String()
+{//Default constructor
+	
+}
+String::String(char * rhs)
+{//parametrized constructor
+	
+}
+String::String(const String &rhs)
+{//copy constructor
+	
+}
+String::~String()
+{//Destructor
+	delete s_ptr;
+}
+
+int String::getLen()
+{
+	return len;
+}
+void String::setLen(int Len)
+{
+	len = Len;
+}
+String & operator=(const String & rhs)  //string assignment (copy)
+{
+	
+}
+String operator+(const String & rhs)    //concatenate strings
+{
+	strcat(s_ptr,rhs.s_ptr);
+}
+bool operator==(const String & rhs)     //identical strings ???
+{
+	if(len != rhs.getLen())
+	{//if not equal length, strings not equal!
+		return false;
+	}
+	else
+	{
+		for(int i = 0; i < len;++i)
+		{
+			if(s_ptr[i] != rhs.s_ptr[i])
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+	}
+}
+char operator[ ](int spot)		        //retrieve nth letter
+{
+	char result = *s_ptr[spot];
+	
+	return result;
+}
