@@ -71,13 +71,14 @@ class Poly{
 		Poly operator+( const Poly &rhs);		// add two polynomials
 		Poly operator-( const Poly &rhs);		// subt two polynomials
 		Poly operator*( const int scale);		// scale a  polynomial
+		Poly operator*(const int scale, const Poly &rhs); 						//prefix operator overloading
 		//	P2 = P1*scale
 		//	Poly scale*Poly
 		//	P2 = scale*P1
 		Poly operator*(const Poly &rhs);		// mult two polynomials
 		bool  operator==(const Poly &rhs);		// equality operator
 		const int & operator[ ](int I)const;       // return the Ith coefficient
-//		int & operator[ ](int I);                 	// return the Ith coefficient
+		int & operator[ ](int I);                 	// assign the Ith coefficient
 		int operator( )(int X);			// evaluate P(x) according to a value of X
 		Poly & operator=(const Poly & rhs);
 		
@@ -103,20 +104,19 @@ int main(){
 	
 	////display the following results  for the polynomials defined above
 	//o	P3 = P1 + P2;
-	//P3 = P1*P2;
-//	cout << "P3 = P1 + P2" << endl;
 	//o	P3 = P2 - P1;
-	
 	//o	P3 = P1*P2;
-	//Poly P3 = P1*P2;
-	//cout << "P3 = P1 * P2 = " << P3;
-	
+		//P3 = P1*P2;
+	//o	P3 = P1*10;
 	P3 = P1*10;
-	cout << "P3 = " << P3 << endl;
-	
+	cout << "P3 *10 = " << P3 << endl;
 	//o	P3 = 10*P1;
+	P3 = 10*P1;
+	cout << "10 * P3 = " << P3 << endl; 
 	
-	//o	bool flag  = (P1==P2);
+	bool flag  = (P1==P2);
+	
+	cout << "P1 == P2? "<< flag << endl;
 	
 	//o	P1[3] = P2[5];	// assign the 5th coefficient of P2 to 3rd coefficient of P1
 	
@@ -288,6 +288,13 @@ Poly Poly::operator*( const int scale)		// scale a  polynomial
 	
 	return *this;
 }
+Poly Poly::operator*(const int scale, const Poly& rhs)
+{
+	for (int i = 0; i < order; ++i)
+	{
+		rhs.coeff[i] *= scale;
+	}
+}
 	//P2 = P1*scale
 	//Poly scale*Poly
 	//P2 = scale*P1
@@ -353,10 +360,10 @@ const int & Poly::operator[ ](int I)const       // return the Ith coefficient
 {
 	return coeff[I];
 }
-//int & Poly::operator[ ](int I)                 	// return the Ith coefficient
-//{
-//	
-//}
+int & Poly::operator[ ](int I)                 	// assign the Ith coefficient
+{
+	coeff[I]= I;
+}
 int Poly::operator( )(int X)			// evaluate P(x) according to a value of X (CHANGE TO HORNER METHOD)
 {
 	int sum = 0; //init sum to hold accumulated number
