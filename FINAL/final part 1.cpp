@@ -91,30 +91,42 @@ int main(){
 	//P1(x) = 2x4 + 3x3 - 12x2 + x - 19 (4th order polynomial)
 	//P2(x) = 2x7 + 7x5 - 6x2 + x - 19 (7th order polynomial)
 	
-	Poly P1;
-//	P1.set([2,3,12,1,19],4);
-//	P2.set([1,0,7,0,0,6,1,-19],7);
+	Poly P1,P2,P3;
+	int coeff1[5] = {2,3,12,1,19};
+	int coeff2[8] = {2,0,7,0,0,6,1,-19};
+	P1.set(coeff1,4);
+	P2.set(coeff2,7);
+	cout << "P1 = " << P1 << endl;
+//	cout << "If X = 5, the resulting solution is: " << P1(5) << endl;
+	cout << "P2 = " << P2 << endl;
+//	cout << "If X = 5, the resulting solution is: " << P2(5) << endl;	
 	
-	P1.set();
-	cout << P1;
-	cout << "If X = 5, the resulting solution is: " << P1(5) << endl;
-	
-	
-	//
 	////display the following results  for the polynomials defined above
 	//o	P3 = P1 + P2;
+	//P3 = P1*P2;
+//	cout << "P3 = P1 + P2" << endl;
 	//o	P3 = P2 - P1;
+	
 	//o	P3 = P1*P2;
-	//o	P3 = P1*10;
+	//Poly P3 = P1*P2;
+	//cout << "P3 = P1 * P2 = " << P3;
+	
+	P3 = P1*10;
+	cout << "P3 = " << P3 << endl;
+	
 	//o	P3 = 10*P1;
+	
 	//o	bool flag  = (P1==P2);
+	
 	//o	P1[3] = P2[5];	// assign the 5th coefficient of P2 to 3rd coefficient of P1
+	
 	//o	int Z = P1(int  X = 5);   // evaluate  Polynomial for input X
 	//     // suggest using Horner's method
 	//
 	//
 	//o	The displayed polynomial for P2 should be printed as follows
 	//2X^7 + 7X^5 - 6X^2 + 1X - 1
+	//cout << P2;
 	
 };
 
@@ -131,7 +143,7 @@ Poly::Poly() // Default Constructor- order=0 & coeff[0] =1
 Poly::Poly(int Order , int Default)// creates  Nth order poly and inits all coeffs
 {
 	#ifdef DEBUG
-	cout << "Paramaterized Constructor (ints)." << endl;
+	cout << "Paramaterized Constructor with default (ints)." << endl;
 	#endif
 	order = Order; //initialize order
 	coeff = new int[order+1];
@@ -219,7 +231,49 @@ int * Poly::get( )const 	      //returns pointer to coeff array
 //overloaded operators
 Poly Poly::operator+( const Poly &rhs)		// add two polynomials
 {
+	Poly result; //create a new polynomial to store the result
+	int rhsorder = rhs.getOrder(); //get order of rhs
 	
+	#ifdef DEBUG
+	cout << "Operator+" << endl;
+	cout << "Order of lhs: " << order << endl;
+	cout << "Order of rhs: " << rhsorder << endl;
+	#endif
+	
+	//make the order the highest order of the two
+	if(order < rhsorder)
+	{
+		result = rhs; // set the result equal to the rhs, then add the lhs
+		#ifdef DEBUG
+		cout << "Order of first argument (lhs) is < order of second argument (rhs)" << endl;
+		cout << "result set to rhs, and equals: " << result << endl;
+		#endif
+		for (int i = 0; i<= order;++i)
+		{
+			result.coeff[order - i] += coeff[order - i];
+			#ifdef DEBUG
+			cout << "lhs coeff = " << coeff[order - i] << "; rhs coeff = " << rhs.coeff[order - i] << "; result.coeff[i] = "  << result.coeff[order - i] << endl; 
+			cout << "order - i = "<< order - i << " result.coeff["<< order - i << "] = "<< result.coeff[order - i] << endl;
+			#endif
+		}
+		#ifdef DEBUG
+		cout << "Exiting for loop..." << endl;
+		#endif
+	}
+	if(order > rhsorder)
+	{
+	#ifdef DEBUG
+	cout << "Order of first argument (lhs) is > order of second argument (rhs)" << endl;
+	#endif
+		result.set(coeff,order+1); //set the result to be same as lhs, then add rhs
+		for (int i = 0; i<= order + 1;++i)
+		{
+			result.coeff[i] += rhs.coeff[i];
+		}
+	}
+	
+	cout << "Resulting polynomial is: " << result << endl;
+	return result;
 }
 Poly Poly::operator-( const Poly &rhs)		// subt two polynomials
 {
@@ -227,14 +281,55 @@ Poly Poly::operator-( const Poly &rhs)		// subt two polynomials
 }
 Poly Poly::operator*( const int scale)		// scale a  polynomial
 {
+	for (int i = 0; i < order; ++i)
+	{
+		coeff[i] *= scale;
+	}
 	
+	return *this;
 }
 	//P2 = P1*scale
 	//Poly scale*Poly
 	//P2 = scale*P1
-Poly Poly::operator*(const Poly &rhs)		// mult two polynomials
-{
-	
+Poly Poly::operator*(const Poly &rhs)
+ {
+   int *shorter = NULL;
+   int *longer  = NULL;
+   int s = 0;
+   int l = 0;
+
+   if(order < rhs.order){
+     shorter = coeff;
+     s       = order;
+     longer  = rhs.coeff;
+     l       = rhs.order;
+   } else {
+     shorter = rhs.coeff;
+     s       = rhs.order;
+     longer  = coeff;
+     l       = order;
+   }
+
+   Poly sum = Poly(l, longer) * shorter[0];
+   int *prod;
+   int nl;
+   for (int i = 1; i <= s; i++){
+     nl = l + i;
+
+     prod = new int[nl + 1];
+
+     for(int j = 0; j < i; j++){
+       prod[j] = 0;
+     }
+
+     for(int k = 0; k <= l; k++){
+       prod[k+i] = shorter[i] * longer[k];
+     }
+
+     sum = sum + Poly(nl, prod);
+   }
+
+   return sum;
 }
 bool  Poly::operator==(const Poly &rhs)		// equality operator
 {
@@ -262,7 +357,7 @@ const int & Poly::operator[ ](int I)const       // return the Ith coefficient
 //{
 //	
 //}
-int Poly::operator( )(int X)			// evaluate P(x) according to a value of X
+int Poly::operator( )(int X)			// evaluate P(x) according to a value of X (CHANGE TO HORNER METHOD)
 {
 	int sum = 0; //init sum to hold accumulated number
 	for(int i = 0; i < order; ++i)
@@ -273,12 +368,13 @@ int Poly::operator( )(int X)			// evaluate P(x) according to a value of X
 	
 	return sum;
 }
+
 Poly & Poly::operator=(const Poly & rhs)
 {//assign one polynomial object to another
 	order = rhs.order;
 	for(int i = 0; i< order + 1; ++i)
 	{
-		coeff[i] = rhs.coeff[i];
+		coeff[order - i] = rhs.coeff[order - i];
 	}
 }
 
@@ -338,7 +434,6 @@ ostream & operator<<(ostream & Out, const Poly &rhs)
 				Out << rhs.coeff[i]; //output without the "X^"
 			}
 		}
-		
 	}
 	Out << endl;
 }
